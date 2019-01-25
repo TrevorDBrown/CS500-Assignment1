@@ -1,0 +1,4 @@
+324 Computer 500.0
+188 Printer 200.0
+229 Toner 40.0
+117 Adobe 150.0

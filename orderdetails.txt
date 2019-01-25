@@ -1,0 +1,6 @@
+Order Details
+Customer Name	Product Name	Price	Quantity	Order Amount	Discount
+Austin		Printer		200.0		2		360.0		40.0
+Alex		Toner		40.0		3		120.0		0.0
+Ashby		Computer		500.0		1		450.0		50.0
+Austin		Computer		500.0		1		450.0		50.0
