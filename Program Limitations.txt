@@ -1,0 +1,30 @@
+/*
+ * 	Bill's Computer Parts
+ *  An application for managing orders for Bill's Computer Parts
+ *  
+ *  CS 500 - Spring 2019
+ *  Trevor D. Brown
+ *  
+ *  Program Details.txt - an explanation of inherent limits and thoughts on the program.
+ */
+
+Limitations of this program:
+
+- Two or more distinct Customers cannot have the same name.
+	- Potential Solution: Use a sequence of unique digits at the end of the name.
+
+- Customer cannot place multiple orders for a specific product at different times:
+	- i.e. Austin cannot order a Computer twice, unless it's a Computer with a quantity of 2.
+	- Potential Solution: Append a unique value (such as a Order ID or a Timestamp) that makes each 
+	order absolutely unique.
+	
+My thoughts:
+I believe this program is well designed with the exception of the generateOrderSummary method.
+This method uses a bit of a "hack" in order to compute the largest order. Instead of comparing using the objects,
+the data (name and order totals) is stored in two ArrayLists, which we must keep in check with the indexes.
+If something were to occur where a value did not add, or was added out of sequence, the values would be incorrect.
+A solution to this problem would be to store references to the Customer object and Product object into the 
+Order object, instead of just the values read from the orders.txt file. This would've allowed a direct comparison
+of Order totals, rather than having to compute them on the fly. Additionally, because of the time constraint of 
+this project, I could not redesign the solution in a timely manner. This proves that I must take more time to
+plan more effectively. 
