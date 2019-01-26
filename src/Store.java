@@ -181,26 +181,34 @@ public class Store {
 			for (Order currentOrder: this.ourOrders) {
 				// Get the data from existing objects related to the order.
 				String customerName = this.getCustomer(currentOrder.getCustomerID()).getCustomerName();
-				String productName = this.getProduct(currentOrder.getProductID()).getProductName();
-				double productPrice = this.getProduct(currentOrder.getProductID()).getProductPrice();
-				int quantity = currentOrder.getQuantity();
-				double discount = this.getCustomer(currentOrder.getCustomerID()).getDiscountEligibility() == true?.1:0;
+				// If the customer name is not blank, proceed with calculations.
+				// Otherwise, return an error and proceed with next order.
+				if (!customerName.equals("")) {
+					String productName = this.getProduct(currentOrder.getProductID()).getProductName();
+					double productPrice = this.getProduct(currentOrder.getProductID()).getProductPrice();
+					int quantity = currentOrder.getQuantity();
+					double discount = this.getCustomer(currentOrder.getCustomerID()).getDiscountEligibility() == true?.1:0;
+					
+					/* 
+					 * Compute the order amount using the formula: (price * quantity) * (1 - discount)
+					 * discount will either be 0 (no discount) or .1 (10% discount)
+					 */ 
+					double orderAmount = (productPrice * quantity) * (1 - discount);
+					/*
+					 * Computer the actual discount using the formula: (price * quantity) * (discount)
+					 * discount will either be 0 (making discount 0) or .1 (10% of the original price)
+					 */
+					double actualDiscount = (productPrice * quantity) * discount;
+					
+					// Write the record the file
+					String orderDetailRecord = customerName + "\t\t" + productName + "\t\t" + productPrice + "\t\t" + quantity + "\t\t" + orderAmount + "\t\t" + actualDiscount + "\n";
+					System.out.print(orderDetailRecord);
+					fileWriter.write(orderDetailRecord);
+				}else {
+					// Customer Not Found error message
+					System.out.println("Error - Customer does not exist. Skipping order.");
+				}
 				
-				/* 
-				 * Compute the order amount using the formula: (price * quantity) * (1 - discount)
-				 * discount will either be 0 (no discount) or .1 (10% discount)
-				 */ 
-				double orderAmount = (productPrice * quantity) * (1 - discount);
-				/*
-				 * Computer the actual discount using the formula: (price * quantity) * (discount)
-				 * discount will either be 0 (making discount 0) or .1 (10% of the original price)
-				 */
-				double actualDiscount = (productPrice * quantity) * discount;
-				
-				// Write the record the file
-				String orderDetailRecord = customerName + "\t\t" + productName + "\t\t" + productPrice + "\t\t" + quantity + "\t\t" + orderAmount + "\t\t" + actualDiscount + "\n";
-				System.out.print(orderDetailRecord);
-				fileWriter.write(orderDetailRecord);
 			}
 			
 			fileWriter.close();	// Close the FileWriter object (this frees the file for use elsewhere)
@@ -264,29 +272,37 @@ public class Store {
 			for (Order currentOrder: this.ourOrders) {
 				// Get the data from existing objects related to the order.
 				String customerName = this.getCustomer(currentOrder.getCustomerID()).getCustomerName();
-				double productPrice = this.getProduct(currentOrder.getProductID()).getProductPrice();
-				int quantity = currentOrder.getQuantity();
-				double discount = this.getCustomer(currentOrder.getCustomerID()).getDiscountEligibility() == true?.1:0;
-				
-				/* 
-				 * Compute the order amount using the formula: (price * quantity) * (1 - discount)
-				 * discount will either be 0 (no discount) or .1 (10% discount)
-				 */ 
-				double orderAmount = (productPrice * quantity) * (1 - discount);
-				
-				/*
-				 * if the name of the Customer does not currently exist in the names ArrayList,
-				 * add the name, and the order amount to both the names and totals ArrayLists, respectively.
-				 * 
-				 * Otherwise, find the index of the Customer's name, and add the current total to the existing total.
-				 */
-				if (!names.contains(customerName)) {
-					names.add(customerName);
-					totals.add(orderAmount);
+				// If the customer name is not blank, proceed with calculations.
+				// Otherwise, return an error and proceed with next order.
+				if (!customerName.equals("")){
+					double productPrice = this.getProduct(currentOrder.getProductID()).getProductPrice();
+					int quantity = currentOrder.getQuantity();
+					double discount = this.getCustomer(currentOrder.getCustomerID()).getDiscountEligibility() == true?.1:0;
+					
+					/* 
+					 * Compute the order amount using the formula: (price * quantity) * (1 - discount)
+					 * discount will either be 0 (no discount) or .1 (10% discount)
+					 */ 
+					double orderAmount = (productPrice * quantity) * (1 - discount);
+					
+					/*
+					 * if the name of the Customer does not currently exist in the names ArrayList,
+					 * add the name, and the order amount to both the names and totals ArrayLists, respectively.
+					 * 
+					 * Otherwise, find the index of the Customer's name, and add the current total to the existing total.
+					 */
+					if (!names.contains(customerName)) {
+						names.add(customerName);
+						totals.add(orderAmount);
+					}else {
+						int currentCustomerIndex = names.indexOf(customerName);
+						totals.set(currentCustomerIndex, totals.get(currentCustomerIndex) + orderAmount);
+					}
 				}else {
-					int currentCustomerIndex = names.indexOf(customerName);
-					totals.set(currentCustomerIndex, totals.get(currentCustomerIndex) + orderAmount);
+					// Customer Not Found error message
+					System.out.println("Error - Customer does not exist. Skipping order.");
 				}
+				
 			}
 			
 			/*
